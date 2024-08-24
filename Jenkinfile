@@ -49,7 +49,7 @@ pipeline {
               mvn clean verify sonar:sonar \
                 -Dsonar.projectKey=My_Project_key \
                 -Dsonar.projectName='My_Project_key' \
-                -Dsonar.host.url=http://localhost:9000 \
+                -Dsonar.host.url='http://localhost:9000' \
                 -Dsonar.token=sqp_a8a0301fa305b0da33bcd43d423644a40dbecccf
             }
         }
