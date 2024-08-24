@@ -2,21 +2,23 @@ pipeline {
     agent any
     
     stages {
+        stage('Checkout') {
+            steps {
+               
+                checkout([$class: 'GitSCM', 
+                          branches: [[name: '*/main']], 
+                          userRemoteConfigs: [[url: 'https://github.com/Manish-Pandey-ji/Python_Programing.git']]
+                ])
+            }
+        }
+
         stage('Build') {
             steps {
                 sh 'mvn clean package'
             }
         }
-        stage('checkout') {
-            steps {
-                checkout([$class: 'GitSCM', 
-                          branches: [[name: '*/main']], 
-                          userRemoteConfigs: [[url: 'https://github.com/Manish-Pandey-ji/Java-Project.git']]
-                ]
-            }
-        }
 
-        stage('SonarQube Analysis') {
+       stage('SonarQube Analysis') {
             steps {
                 sonarQube {
                     serverUrl 'http://localhost:9000'
