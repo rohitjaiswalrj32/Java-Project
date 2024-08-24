@@ -1,56 +1,50 @@
 pipeline {
     agent any
     
+    environment {
+        
+        SONARQUBE_SERVER_URL = 'http://localhost:9000'
+        SONARQUBE_TOKEN = 'sqp_a8a0301fa305b0da33bcd43d423644a40dbecccf'
+        SONARQUBE_PROJECT_KEY = 'My_Project_key'
+    }
+    
     stages {
         stage('Checkout') {
             steps {
-               
+                
                 checkout([$class: 'GitSCM', 
                           branches: [[name: '*/main']], 
-                          userRemoteConfigs: [[url: 'https://github.com/Manish-Pandey-ji/Python_Programing.git']]
+                          userRemoteConfigs: [[url: 'https://github.com/Manish-Pandey-ji/Java-Project.git']]
                 ])
             }
         }
 
         stage('Build') {
             steps {
+               
                 sh 'mvn clean package'
             }
         }
 
-       stage('SonarQube Analysis') {
+        stage('SonarQube Analysis') {
             steps {
-                sonarQube {
-                    serverUrl 'http://localhost:9000'
-                    projectName 'My_Project_key'
-                    token 'sqp_a8a0301fa305b0da33bcd43d423644a40dbecccf'
-                    properties([
-                        'sonar.projectKey=My_Project_key',
-                        'sonar.projectName=My_Project_key',
-                        'sonar.sources=src/main/java',
-                        'sonar.java.binaries=target/classes',
-                        'sonar.language=java'
-                    ])
+                
+                withSonarQubeEnv('SonarQube_Server') {
+                    sh '''
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} \
+                        -Dsonar.host.url=${SONARQUBE_SERVER_URL} \
+                        -Dsonar.login=${SONARQUBE_TOKEN}
+                    '''
                 }
             }
         }
 
         stage('SonarQube Quality Gate') {
             steps {
-                waitForQualityGate {
-                    sonarQubeServerUrl 'http://localhost:9000'
-                    sonarQubeToken 'sqp_a8a0301fa305b0da33bcd43d423644a40dbecccf'
-                    sonarQubeProjectKey 'My_Project_key'
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
                 }
-            }
-        }
-        stage('Scan') {
-            steps {
-              mvn clean verify sonar:sonar \
-                -Dsonar.projectKey='My_Project_key' \
-                -Dsonar.projectName='My_Project_key' \
-                -Dsonar.host.url='http://localhost:9000' \
-                -Dsonar.token=sqp_a8a0301fa305b0da33bcd43d423644a40dbecccf
             }
         }
     }
