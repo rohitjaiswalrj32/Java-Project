@@ -7,7 +7,7 @@ pipeline {
     environment {
         
         SONARQUBE_SERVER_URL = 'http://localhost:9000'
-        SONARQUBE_TOKEN = 'sqp_a8a0301fa305b0da33bcd43d423644a40dbecccf'
+        SONARQUBE_TOKEN = sqp_a8a0301fa305b0da33bcd43d423644a40dbecccf
         SONARQUBE_PROJECT_KEY = 'My_Project_key'
     }
     
