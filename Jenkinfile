@@ -1,6 +1,9 @@
 pipeline {
     agent any
-    
+    tools {
+        jdk 'JDK'
+        maven 'Maven3'
+    }
     environment {
         
         SONARQUBE_SERVER_URL = 'http://localhost:9000'
@@ -22,7 +25,7 @@ pipeline {
         stage('Build') {
             steps {
                
-                bat 'mvn clean package'
+                bat 'mvn clean compile install'
             }
         }
 
@@ -31,9 +34,9 @@ pipeline {
                 
                 withSonarQubeEnv('SonarQube_Server') {
                     bat '''
-                        mvn sonar:sonar \
+                        mvn clean verify sonar:sonar \
                         -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} \
-                        -Dsonar.host.url='http:/localhost:9000' \
+                        -Dsonar.host.url='http:/172.31.48.1:9000' \
                         -Dsonar.login=${SONARQUBE_TOKEN}
                     '''
                 }
