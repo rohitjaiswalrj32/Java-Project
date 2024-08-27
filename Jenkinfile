@@ -33,10 +33,11 @@ pipeline {
                 
                 withSonarQubeEnv('SonarQube_Server') {
                     bat '''
-                        mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} \
-                        -Dsonar.host.url=http://172.31.48.1:9000 \
-                        -Dsonar.login=sqp_a8a0301fa305b0da33bcd43d423644a40dbecccf
+                       mvn clean verify sonar:sonar \
+                          -Dsonar.projectKey=My_Project_key \
+                          -Dsonar.projectName='My_Project_key' \
+                          -Dsonar.host.url=http://localhost:9000 \
+                          -Dsonar.token=sqp_a8a0301fa305b0da33bcd43d423644a40dbecccf
                     '''
                 }
             }
