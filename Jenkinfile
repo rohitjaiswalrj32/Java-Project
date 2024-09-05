@@ -44,7 +44,7 @@ pipeline {
         }
         stage('ZAP Scan') {
             steps {
-                bat 'docker run --rm -v "%cd%\\zap-report:/zap/report" owasp/zap'
+                bat 'docker run --rm -v "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\java-sonar\\zap-report:/zap/report" owasp/zap'
             }
         }
     }
