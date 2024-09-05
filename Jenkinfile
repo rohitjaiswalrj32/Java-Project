@@ -42,5 +42,10 @@ pipeline {
                 }
             }
         }
+        stage('ZAP Scan') {
+            steps {
+                sh 'docker run --rm -v $(pwd)/zap-report:/zap/report my-zap-image'
+                }
+        }
     }
 }
