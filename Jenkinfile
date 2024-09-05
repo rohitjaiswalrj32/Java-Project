@@ -44,8 +44,8 @@ pipeline {
         }
         stage('ZAP Scan') {
             steps {
-                sh 'docker run --rm -v $(pwd)/zap-report:/zap/report my-zap-image'
-                }
+                bat 'docker run --rm -v "%cd%\zap-report:/zap/report" owasp/zap'
+            }
         }
     }
 }
