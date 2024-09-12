@@ -8,6 +8,7 @@ pipeline {
         
         SONARQUBE_SERVER_URL = 'http://localhost:9000'
         SONARQUBE_PROJECT_KEY = 'My_Project_key'
+        DOCKER_IMAGE = 'Java_Project'
     }
     
     stages {
@@ -42,9 +43,13 @@ pipeline {
                 }
             }
         }
-        stage('ZAP Scan') {
+        stage('build') {
             steps {
-                bat 'docker run --rm -v "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\java-sonar\\zap-report:/zap/report" owasp/zap'
+                script {
+                    
+                        docker.build("${DOCKER_IMAGE_NAME}:${BUILD_NUMBER}")
+                    
+                }
             }
         }
     }
