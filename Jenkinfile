@@ -58,6 +58,9 @@ pipeline {
             steps {
                 script {
                     bat '''
+                        
+
+                        
                         trivy image --format json -o ${REPORT_FILE} ${DOCKER_IMAGE}:${BUILD_NUMBER}
                     '''
                 }
