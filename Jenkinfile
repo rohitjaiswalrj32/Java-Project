@@ -9,6 +9,8 @@ pipeline {
         SONARQUBE_SERVER_URL = 'http://localhost:9000'
         SONARQUBE_PROJECT_KEY = 'My_Project_key'
         DOCKER_IMAGE = 'java_project'
+        REPORT_FILE = 'trivy-report.json'
+        PDF_FILE = 'trivy-report.pdf'
     }
     
     stages {
@@ -49,6 +51,24 @@ pipeline {
                     
                         docker.build("${DOCKER_IMAGE}:${BUILD_NUMBER}")
                     
+                }
+            }
+        }
+        stage('Trivy Scan') {
+            steps {
+                script {
+                    bat '''
+                        trivy image --format json -o ${REPORT_FILE} ${DOCKER_IMAGE}:${BUILD_NUMBER}
+                    '''
+                }
+            }
+        }
+        stage('Generate PDF Report') {
+            steps {
+                script {
+                    bat '''
+                        type ${REPORT_FILE} | jq '.' | pandoc -o ${PDF_FILE}
+                    '''
                 }
             }
         }
