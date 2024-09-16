@@ -16,8 +16,8 @@ public class BadCodeExample {
         int[] results = new int[10];
 
         // Fill the array with values
-        for (int i = 0; i < results.length; i++) {
-            results[i] = i * 2; // Arbitrary values
+        for (int j = 0; i < results.length; i++) {
+            results[j] = i * 2; // Arbitrary values
         }
 
         // Print all results
