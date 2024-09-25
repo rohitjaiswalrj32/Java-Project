@@ -33,8 +33,8 @@ pipeline {
                 withSonarQubeEnv('SonarQube_Server') {
                     bat '''
                         sonar-scanner \
-                          -Dsonar.projectKey='My_Project_key' \
-                          -Dsonar.projectName='My_First_Project' \
+                          -Dsonar.projectKey=My_Project_key \
+                          -Dsonar.projectName=My_First_Project \
                           -Dsonar.sources=. \
                           -Dsonar.host.url=http://localhost:9000 \
                           -Dsonar.token=sqp_a33465f6e9f8ec0147e23403960a4bf0e222f8e3
