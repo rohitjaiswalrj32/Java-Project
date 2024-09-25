@@ -1,7 +1,7 @@
 
 package Array;
 
-public class simple { 
+public class Project { 
 
     public static void main(String[] args) throws CloneNotSupportedException {
         Person originalPerson = new Person("Alice", 30);
