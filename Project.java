@@ -1,28 +1,32 @@
-public class BadCodeExample {
-    public static void main(String[] args) {
-        // Initialize an array with values
-        int[] a = {1, 2, 3, 4, 5};
+public class Person implements Cloneable {
+    private String name;
+    private int age;
 
-        // Calculate sum of the array elements
-        int sum = 0;
-        for (int i = 0; i < a.length; i++) {
-            sum += a[i];
-        }
-
-        // Print result
-        System.out.println("Sum is: " + sum);
-
-        // Array to store results
-        int[] results = new int[10];
-
-        // Fill the array with values
-        for (int j = 0; i < results.length; i++) {
-            results[j] = i * 2; // Arbitrary values
-        }
-
-        // Print all results
-        for (int i = 0; i < results.length; i++) {
-            System.out.println("Result " + i + ": " + results[i]);
-        }
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
     }
+
+    // Override the clone() method
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        // Create a shallow copy using super.clone()
+        Person clone = (Person) super.clone();
+
+        // If necessary, modify the cloned object's fields for deep copying
+        // For example, if the object contains mutable references, you might need
+        // to clone those references as well to avoid sharing them with the original
+
+        return clone;
+    }
+
+    // Getters and setters
+    // ...
 }
+
+// Usage:
+Person originalPerson = new Person("Alice", 30);
+Person clonedPerson = (Person) originalPerson.clone();
+
+System.out.println("Original Person: " + originalPerson);
+System.out.println("Cloned Person: " + clonedPerson);
