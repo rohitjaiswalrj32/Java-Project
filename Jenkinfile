@@ -31,14 +31,14 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube_Server') {
-                    bat '''
-                        sonar-scanner \
-                          -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} \
-                          -Dsonar.projectName='My_First_Project' \
-                          -Dsonar.sources=. \
-                          -Dsonar.host.url=${SONARQUBE_SERVER_URL} \
+                    bat """
+                        sonar-scanner ^
+                          -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} ^
+                          -Dsonar.projectName='My_First_Project' ^
+                          -Dsonar.sources=. ^
+                          -Dsonar.host.url=${SONARQUBE_SERVER_URL} ^
                           -Dsonar.login=sqp_a33465f6e9f8ec0147e23403960a4bf0e222f8e3
-                    '''
+                    """
                 }
             }
         }
