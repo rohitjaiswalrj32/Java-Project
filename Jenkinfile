@@ -58,10 +58,7 @@ pipeline {
             steps {
                 script {
                     bat '''
-                        
-
-                        
-                        trivy image --format json -o ${REPORT_FILE} ${DOCKER_IMAGE}:${BUILD_NUMBER}
+                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/root/.cache/ aquasec/trivy image --format json -o ${REPORT_FILE} ${DOCKER_IMAGE}:${BUILD_NUMBER}
                     '''
                 }
             }
