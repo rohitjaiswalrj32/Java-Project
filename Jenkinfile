@@ -38,11 +38,8 @@ pipeline {
                     bat '''
                        mvn clean verify sonar:sonar \
                           -Dsonar.projectKey=My_Project_key \
-                          -Dsonar.projectName='My_Project_key' \
-                          -Dsonar.projectKey=My_First_Project \
-                          -Dsonar.projectName='My_First_Project' \
+                          -Dsonar.projectName='My_Project_key' 
                           -Dsonar.host.url=http://localhost:9000 \
-                          -Dsonar.token=sqp_a8a0301fa305b0da33bcd43d423644a40dbecccf
                           -Dsonar.token=sqp_a33465f6e9f8ec0147e23403960a4bf0e222f8e3
                     '''
                 }
