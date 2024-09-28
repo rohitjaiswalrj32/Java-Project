@@ -5,18 +5,16 @@ pipeline {
         maven 'Maven3'
     }
     environment {
-        
         SONARQUBE_SERVER_URL = 'http://localhost:9000'
         SONARQUBE_PROJECT_KEY = 'My_Project_key'
         DOCKER_IMAGE = 'java_project'
         REPORT_FILE = 'trivy-report.json'
         PDF_FILE = 'trivy-report.pdf'
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
-                
                 checkout([$class: 'GitSCM', 
                           branches: [[name: '*/main']], 
                           userRemoteConfigs: [[url: 'https://github.com/Manish-Pandey-ji/Java-Project.git']]
@@ -26,48 +24,47 @@ pipeline {
 
         stage('Build') {
             steps {
-               
                 bat 'mvn clean compile install'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                
                withSonarQubeEnv('SonarQube_Server') {
                     bat '''
                        mvn clean verify sonar:sonar \
                           -Dsonar.projectKey=My_First_Project \
-                          -Dsonar.projectName='My_First_Project' 
+                          -Dsonar.projectName='My_First_Project' \
                           -Dsonar.host.url=http://localhost:9000 \
                           -Dsonar.token=sqp_a33465f6e9f8ec0147e23403960a4bf0e222f8e3
                     '''
                 }
             }
         }
-        stage('build') {
+
+        stage('Docker Build') {
             steps {
                 script {
-                   
-                        docker.build("${DOCKER_IMAGE}:${BUILD_NUMBER}")
-                    
+                    docker.build("${DOCKER_IMAGE}:${env.BUILD_NUMBER}")
                 }
             }
         }
-       stage('Trivy Scan') {
+
+        stage('Trivy Scan') {
             steps {
                 script {
                     bat '''
-                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar:/root/.cache/ -v C:/ProgramData/Jenkins/.jenkins/workspace/trivy-db:/root/.trivy aquasec/trivy image --format json -o C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar/trivy-report.json ${DOCKER_IMAGE}:${BUILD_NUMBER}
+                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar:/root/.cache/ -v C:/ProgramData/Jenkins/.jenkins/workspace/trivy-db:/root/.trivy aquasec/trivy image --format json -o C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar/trivy-report.json ${DOCKER_IMAGE}:${env.BUILD_NUMBER}
                     '''
                 }
             }
         }
+
         stage('Generate PDF Report') {
             steps {
                 script {
                     bat '''
-                        type ${REPORT_FILE} | jq '.' | pandoc -o ${PDF_FILE}
+                        type ${env.REPORT_FILE} | jq '.' | pandoc -o ${env.PDF_FILE}
                     '''
                 }
             }
