@@ -8,6 +8,8 @@ pipeline {
         SONARQUBE_SERVER_URL = 'http://localhost:9000'
         SONARQUBE_PROJECT_KEY = 'My_Project_key'
         DOCKER_IMAGE = 'java_project'
+        TRIVY_CACHE = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Minor Project\\trivy-cache"
+        WORKSPACE_DIR = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Minor Project"
         REPORT_FILE = 'trivy-report.json'
         PDF_FILE = 'trivy-report.pdf'
     }
@@ -17,7 +19,7 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', 
                           branches: [[name: '*/main']], 
-                          userRemoteConfigs: [[url: 'https://github.com/Manish-Pandey-ji/Java-Project.git']]
+                          userRemoteConfigs: [[url: 'https://github.com/rohitjaiswalrj32/Java-Project.git']]
                 ])
             }
         }
@@ -33,10 +35,10 @@ pipeline {
                withSonarQubeEnv('SonarQube_Server') {
                     bat '''
                        mvn clean verify sonar:sonar \
-                          -Dsonar.projectKey=My_First_Project \
-                          -Dsonar.projectName='My_First_Project' \
+                          -Dsonar.projectKey=My_Project_key \
+                          -Dsonar.projectName='Security_Pipeline' \
                           -Dsonar.host.url=http://localhost:9000 \
-                          -Dsonar.token=sqp_a33465f6e9f8ec0147e23403960a4bf0e222f8e3
+                          -Dsonar.token=sqp_b45303a7db203b6ae2833729523f51fd66bbf304
                     '''
                 }
             }
