@@ -5,7 +5,7 @@ pipeline {
         maven 'Maven3'
     }
     environment {
-        SONARQUBE_SERVER_URL = 'http://192.168.137.244:9000'
+        SONARQUBE_SERVER_URL = 'http://localhost:9000'
         SONARQUBE_PROJECT_KEY = 'Security_Scanning'
         DOCKER_IMAGE = 'java_project'
         TRIVY_CACHE = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Minor Project\\trivy-cache"
