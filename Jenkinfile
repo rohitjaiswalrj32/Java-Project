@@ -19,7 +19,8 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', 
                           branches: [[name: '*/main']], 
-                          userRemoteConfigs: [[url: 'https://github.com/rohitjaiswalrj32/Java-Project.git']])
+                          userRemoteConfigs: [[url: 'https://github.com/rohitjaiswalrj32/Java-Project.git']]
+                ])
             }
         }
 
@@ -33,10 +34,11 @@ pipeline {
             steps {
                withSonarQubeEnv('SonarQube_Server') {
                     bat '''
-                       sonar-scanner.bat -D"sonar.projectKey=Security_Pipeline" \
-                                         -D"sonar.sources=." \
-                                         -D"sonar.host.url=http://localhost:9000" \
-                                         -D"sonar.token=sqp_6f67c7b8ab5c5c3fe36d3e08b85cfda1ec86a57b"
+                       mvn clean verify sonar:sonar \
+                          -Dsonar.projectKey=My_Project_key \
+                          -Dsonar.projectName='Security_Pipeline' \
+                          -Dsonar.host.url=http://localhost:9000 \
+                          -Dsonar.token=sqp_b45303a7db203b6ae2833729523f51fd66bbf304
                     '''
                 }
             }
