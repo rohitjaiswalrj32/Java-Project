@@ -12,6 +12,7 @@ pipeline {
         WORKSPACE_DIR = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Minor Project"
         REPORT_FILE = 'trivy-report.json'
         PDF_FILE = 'trivy-report.pdf'
+        SONAR_TOKEN = 'sqp_6f67c7b8ab5c5c3fe36d3e08b85cfda1ec86a57b' // Store your SonarQube token here
     }
 
     stages {
@@ -32,13 +33,13 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-               withSonarQubeEnv('SonarQube_Server') {
+                withSonarQubeEnv('SonarQube_Server') {
                     bat '''
-                       mvn clean verify sonar:sonar \
-                          -Dsonar.projectKey=My_Project_key \
-                          -Dsonar.projectName='Security_Pipeline' \
-                          -Dsonar.host.url=http://localhost:9000 \
-                          -Dsonar.token=sqp_b45303a7db203b6ae2833729523f51fd66bbf304
+                        mvn clean verify sonar:sonar \
+                            -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} \
+                            -Dsonar.projectName='Security_Pipeline' \
+                            -Dsonar.host.url=${SONARQUBE_SERVER_URL} \
+                            -Dsonar.login=${SONAR_TOKEN}
                     '''
                 }
             }
