@@ -6,7 +6,7 @@ pipeline {
     }
     environment {
         SONARQUBE_SERVER_URL = 'http://localhost:9000'
-        SONARQUBE_PROJECT_KEY = 'Security_Scanning'
+        SONARQUBE_PROJECT_KEY = 'Security_Pipeline'
         DOCKER_IMAGE = 'java_project'
         TRIVY_CACHE = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Minor Project\\trivy-cache"
         WORKSPACE_DIR = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Minor Project"
@@ -36,8 +36,8 @@ pipeline {
                withSonarQubeEnv('SonarQube_Server') {
                     bat '''
                         mvn clean verify sonar:sonar ^
-                            -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} ^
-                            -Dsonar.projectName='Security_Scanning' ^
+                            -Dsonar.projectKey=Security_Pipeline ^
+                            -Dsonar.projectName='Security_Pipeline' ^
                             -Dsonar.host.url=${env.SONARQUBE_SERVER_URL} ^
                             -Dsonar.login=${SONAR_TOKEN} ^
                             -X
