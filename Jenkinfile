@@ -77,5 +77,8 @@ pipeline {
                 }
             }
         }
+        stage('Archive Reports') {
+                    steps {
+                        archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
     }
 }
