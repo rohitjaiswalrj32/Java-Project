@@ -10,8 +10,6 @@ pipeline {
         DOCKER_IMAGE = 'java_project'
         TRIVY_CACHE = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Minor Project\\trivy-cache"
         WORKSPACE_DIR = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Minor Project"
-        REPORT_FILE = 'trivy-report.json'
-        PDF_FILE = 'trivy-report.pdf'
         SONAR_TOKEN = 'sqp_fb62166209ae691f3140807dab94fe7815457bc4' // Updated token
     }
 
@@ -36,7 +34,7 @@ pipeline {
                withSonarQubeEnv('SonarQube_Server') {
                     bat '''
                         mvn clean verify sonar:sonar ^
-                            -Dsonar.projectKey=Security_Pipeline ^
+                            -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} ^
                             -Dsonar.projectName='Security_Pipeline' ^
                             -Dsonar.host.url=${env.SONARQUBE_SERVER_URL} ^
                             -Dsonar.login=${SONAR_TOKEN} ^
@@ -57,9 +55,16 @@ pipeline {
         stage('Trivy Scan') {
             steps {
                 script {
+                    // Define the output report file path
+                    def trivyReportPath = "${WORKSPACE_DIR}/trivy-report.json"
+
+                    // Run the Trivy scan and save the report
                     bat '''
-                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar:/root/.cache/ -v C:/ProgramData/Jenkins/.jenkins/workspace/trivy-db:/root/.trivy aquasec/trivy image --scanners vuln --format json -o C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar/trivy-report.json %DOCKER_IMAGE%:%BUILD_NUMBER%
+                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar:/root/.cache/ -v C:/ProgramData/Jenkins/.jenkins/workspace/trivy-db:/root/.trivy aquasec/trivy image --scanners vuln --format json -o ${trivyReportPath} %DOCKER_IMAGE%:%BUILD_NUMBER%
                     '''
+                    
+                    // Output message
+                    echo "Trivy scan report generated at: ${trivyReportPath}"
                 }
             }
         }
@@ -68,7 +73,7 @@ pipeline {
             steps {
                 script {
                     def reportDir = "${env.WORKSPACE}/reports" // Directory for reports
-                    sh "mkdir -p ${reportDir}" // Create the directory if it doesn't exist
+                    bat "mkdir ${reportDir}" // Create the directory if it doesn't exist
                     def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
                     def response = sh(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
                     def reportFilePath = "${reportDir}/sonarqube-report.txt" // Define the report file path
@@ -77,8 +82,12 @@ pipeline {
                 }
             }
         }
+
         stage('Archive Reports') {
-                    steps {
-                        archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
+            steps {
+                archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
+                echo "Archived reports successfully."
+            }
+        }
     }
 }
