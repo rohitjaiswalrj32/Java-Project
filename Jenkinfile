@@ -64,12 +64,16 @@ pipeline {
             }
         }
 
-        stage('Generate PDF Report') {
+        stage('Report Generation') {
             steps {
                 script {
-                    bat '''
-                        type ${env.REPORT_FILE} | jq '.' | pandoc -o ${env.PDF_FILE}
-                    '''
+                    def reportFilePath = "${env.WORKSPACE}/sonarqube-report.txt" // Define the report file path
+                    // Fetching the report from SonarQube
+                    def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
+                    def response = sh(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
+                    // Write the response to a report file
+                    writeFile(file: reportFilePath, text: response)
+                    echo "SonarQube Analysis Report saved at: ${reportFilePath}"
                 }
             }
         }
