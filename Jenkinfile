@@ -10,7 +10,7 @@ pipeline {
         DOCKER_IMAGE = 'java_project'
         TRIVY_CACHE = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Minor Project\\trivy-cache"
         WORKSPACE_DIR = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Minor Project"
-        SONAR_TOKEN = 'sqp_fb62166209ae691f3140807dab94fe7815457bc4' // Updated token
+        SONAR_TOKEN = 'sqp_0b101069336a36b871716c689a61096923cd369c' // Updated token
     }
 
     stages {
