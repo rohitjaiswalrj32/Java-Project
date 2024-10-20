@@ -67,12 +67,12 @@ pipeline {
         stage('Report Generation') {
             steps {
                 script {
-                    def reportFilePath = "${env.WORKSPACE}/sonarqube-report.txt" // Define the report file path
-                    // Fetching the report from SonarQube
+                    def reportDir = "${env.WORKSPACE}/reports" // Directory for reports
+                    sh "mkdir -p ${reportDir}" // Create the directory if it doesn't exist
                     def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
                     def response = sh(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
-                    // Write the response to a report file
-                    writeFile(file: reportFilePath, text: response)
+                    def reportFilePath = "${reportDir}/sonarqube-report.txt" // Define the report file path
+                    writeFile(file: reportFilePath, text: response) // Save the report
                     echo "SonarQube Analysis Report saved at: ${reportFilePath}"
                 }
             }
