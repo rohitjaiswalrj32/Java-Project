@@ -72,6 +72,8 @@ pipeline {
         stage('Report Generation') {
             steps {
                 script {
+                    
+                    //SonarQube_Report
                     def reportDir = "${env.WORKSPACE}/reports" // Directory for reports
                     
                     // Use bat to create the directory on Windows
@@ -86,6 +88,12 @@ pipeline {
                     
                     writeFile(file: reportFilePath, text: response) // Save the report
                     echo "SonarQube Analysis Report saved at: ${reportFilePath}"
+
+
+                    //Trivy_Report
+                    def trivyReportFilePath = "${reportDir}/trivy-report.json" // Define the Trivy report file path
+                    writeFile(file: trivyReportFilePath, text: readFile(trivyReportPath)) // Save the Trivy report
+                    echo "Trivy Scan Report saved at: ${trivyReportFilePath}"
                 }
             }
         }
