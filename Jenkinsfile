@@ -31,13 +31,13 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-               withSonarQubeEnv('SonarQube_Server') {
+                withSonarQubeEnv('SonarQube_Server') {
                     bat '''
                         mvn clean verify sonar:sonar ^
-                            -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} ^
-                            -Dsonar.projectName='Security_Pipeline' ^
-                            -Dsonar.host.url=${env.SONARQUBE_SERVER_URL} ^
-                            -Dsonar.login=${SONAR_TOKEN} ^
+                            -Dsonar.projectKey=Security_Pipeline ^
+                            -Dsonar.projectName=Security_Pipeline ^
+                            -Dsonar.host.url=http://localhost:9000 ^
+                            -Dsonar.token=sqp_bff11fcbb728a813c946e71554523b989cd4d36d ^
                             -X
                     '''
                 }
