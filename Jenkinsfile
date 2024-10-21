@@ -79,7 +79,7 @@ pipeline {
         
                     // Generate SonarQube report
                     def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
-                    def response = sh(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
+                    def response = bat(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
                     def reportFilePath = "${reportDir}/sonarqube-report.txt" // Define the report file path
                     writeFile(file: reportFilePath, text: response) // Save the report
                     echo "SonarQube Analysis Report saved at: ${reportFilePath}"
