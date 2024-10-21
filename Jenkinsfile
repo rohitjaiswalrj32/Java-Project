@@ -60,7 +60,7 @@ pipeline {
 
                     // Run the Trivy scan and save the report
                     bat '''
-                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar:/root/.cache/ -v C:/ProgramData/Jenkins/.jenkins/workspace/trivy-db:/root/.trivy aquasec/trivy image --scanners vuln --format json -o ${trivyReportPath} %DOCKER_IMAGE%:%BUILD_NUMBER%
+                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar:/root/.cache/ -v C:/ProgramData/Jenkins/.jenkins/workspace/trivy-db:/root/.trivy aquasec/trivy image --scanners vuln --timeout 15m --format json -o ${trivyReportPath} %DOCKER_IMAGE%:%BUILD_NUMBER%
                     '''
                     
                     // Output message
