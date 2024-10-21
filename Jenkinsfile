@@ -56,7 +56,7 @@ pipeline {
             steps {
                 script {
                     // Define the output report file path
-                    def trivyReportPath = "${WORKSPACE_DIR}/trivy-report.json"
+                    def trivyReportPath = "${WORKSPACE_DIR}/trivy-report.txt"
 
                     // Run the Trivy scan and save the report
                     bat '''
