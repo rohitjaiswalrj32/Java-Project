@@ -1,8 +1,8 @@
 pipeline {
     agent any
     tools {
-        jdk 'JAVA'
-        maven 'Maven3'
+        jdk 'JAVA_HOME'
+        maven 'MAVEN_HOME'
     }
     environment {
         SONARQUBE_SERVER_URL = 'http://localhost:9000'
@@ -10,7 +10,7 @@ pipeline {
         DOCKER_IMAGE = 'java_project'
         TRIVY_CACHE = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Security_Pipeline\\trivy-cache"
         WORKSPACE_DIR = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Security_Pipeline"
-        SONAR_TOKEN = 'sqp_0b101069336a36b871716c689a61096923cd369c' // Updated token
+        SONAR_TOKEN = 'sqp_bff11fcbb728a813c946e71554523b989cd4d36d' // Updated token
     }
 
     stages {
