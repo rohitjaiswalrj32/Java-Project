@@ -11,6 +11,8 @@ pipeline {
         TRIVY_CACHE = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Security_Pipeline\\trivy-cache"
         WORKSPACE_DIR = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Security_Pipeline"
         SONAR_TOKEN = 'sqp_bff11fcbb728a813c946e71554523b989cd4d36d' // Updated token
+        SONARQUBE_REPORT_PATH = "${WORKSPACE_DIR}\\reports\\sonarqube-report.txt"
+        TRIVY_REPORT_PATH = "${WORKSPACE_DIR}\\trivy-report.txt"
     }
 
     stages {
@@ -80,20 +82,19 @@ pipeline {
                     // Generate SonarQube report
                     def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
                     def response = bat(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
-                    def reportFilePath = "${reportDir}\\sonarqube-report.txt" // Define the report file path
-                    writeFile(file: reportFilePath, text: response) // Save the report
-                    echo "SonarQube Analysis Report saved at: ${reportFilePath}"
+                    writeFile(file: SONARQUBE_REPORT_PATH, text: response) // Save the report using environment variable
+                    echo "SonarQube Analysis Report saved at: ${SONARQUBE_REPORT_PATH}"
         
-                    // Define the path for the Trivy report
-                    def trivyReportPath = "${env.WORKSPACE}\\trivy-report.txt" // Ensure this matches your Trivy scan output path
-                    if (fileExists(trivyReportPath)) {
-                        echo "Trivy scan report generated at: ${trivyReportPath}"
+                    // Check for Trivy report using environment variable
+                    if (fileExists(TRIVY_REPORT_PATH)) {
+                        echo "Trivy scan report generated at: ${TRIVY_REPORT_PATH}"
                     } else {
                         error "Trivy scan report was not generated."
                     }
                 }
             }
         }
+
         
         stage('Archive Reports') {
             steps {
