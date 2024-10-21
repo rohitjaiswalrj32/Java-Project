@@ -73,16 +73,23 @@ pipeline {
             steps {
                 script {
                     def reportDir = "${env.WORKSPACE}/reports" // Directory for reports
-                    bat "mkdir ${reportDir}" // Create the directory if it doesn't exist
+                    
+                    // Use bat to create the directory on Windows
+                    bat "mkdir \"${reportDir}\"" // Create the directory if it doesn't exist
+                    
                     def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
-                    def response = sh(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
+                    
+                    // Use bat for curl command on Windows, ensure correct syntax
+                    def response = bat(script: "curl -s -u ${SONAR_TOKEN}: \"${sonarReportUrl}\"", returnStdout: true)
+                    
                     def reportFilePath = "${reportDir}/sonarqube-report.txt" // Define the report file path
+                    
                     writeFile(file: reportFilePath, text: response) // Save the report
                     echo "SonarQube Analysis Report saved at: ${reportFilePath}"
                 }
             }
         }
-
+        
         stage('Archive Reports') {
             steps {
                 archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
