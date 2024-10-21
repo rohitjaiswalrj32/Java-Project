@@ -76,8 +76,8 @@ pipeline {
                     //SonarQube_Report
                     def reportDir = "${env.WORKSPACE}/reports" // Directory for reports
                     
-                    // Use bat to create the directory on Windows
-                    bat "mkdir \"${reportDir}\"" // Create the directory if it doesn't exist
+                    // Check if the directory exists; if not, create it
+                    bat "IF NOT EXIST \"${reportDir}\" mkdir \"${reportDir}\""
                     
                     def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
                     
