@@ -72,28 +72,25 @@ pipeline {
         stage('Report Generation') {
             steps {
                 script {
-                    
-                    //SonarQube_Report
                     def reportDir = "${env.WORKSPACE}/reports" // Directory for reports
                     
                     // Check if the directory exists; if not, create it
                     bat "IF NOT EXIST \"${reportDir}\" mkdir \"${reportDir}\""
-                    
+        
+                    // Generate SonarQube report
                     def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
-                    
-                    // Use bat for curl command on Windows, ensure correct syntax
-                    def response = bat(script: "curl -s -u ${SONAR_TOKEN}: \"${sonarReportUrl}\"", returnStdout: true)
-                    
+                    def response = sh(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
                     def reportFilePath = "${reportDir}/sonarqube-report.txt" // Define the report file path
-                    
                     writeFile(file: reportFilePath, text: response) // Save the report
                     echo "SonarQube Analysis Report saved at: ${reportFilePath}"
-
-
-                    //Trivy_Report
-                    def trivyReportFilePath = "${reportDir}/trivy-report.json" // Define the Trivy report file path
-                    writeFile(file: trivyReportFilePath, text: readFile(trivyReportPath)) // Save the Trivy report
-                    echo "Trivy Scan Report saved at: ${trivyReportFilePath}"
+        
+                    // Define the path for the Trivy report
+                    def trivyReportPath = "${WORKSPACE}/trivy-report.json" // Ensure this matches your Trivy scan output path
+                    if (fileExists(trivyReportPath)) {
+                        echo "Trivy scan report generated at: ${trivyReportPath}"
+                    } else {
+                        error "Trivy scan report was not generated."
+                    }
                 }
             }
         }
