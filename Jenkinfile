@@ -8,8 +8,8 @@ pipeline {
         SONARQUBE_SERVER_URL = 'http://localhost:9000'
         SONARQUBE_PROJECT_KEY = 'Security_Pipeline'
         DOCKER_IMAGE = 'java_project'
-        TRIVY_CACHE = "C:\ProgramData\Jenkins\.jenkins\workspace\Security_Pipeline\\trivy-cache"
-        WORKSPACE_DIR = "C:\ProgramData\Jenkins\\.jenkins\workspace\Security_Pipeline"
+        TRIVY_CACHE = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Security_Pipeline\\trivy-cache"
+        WORKSPACE_DIR = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Security_Pipeline"
         SONAR_TOKEN = 'sqp_0b101069336a36b871716c689a61096923cd369c' // Updated token
     }
 
