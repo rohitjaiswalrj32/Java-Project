@@ -60,7 +60,7 @@ pipeline {
 
                     // Run the Trivy scan and save the report
                     bat '''
-                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar:/root/.cache/ -v C:/ProgramData/Jenkins/.jenkins/workspace/trivy-db:/root/.trivy aquasec/trivy image --scanners vuln --timeout 15m --format json -o ${trivyReportPath} %DOCKER_IMAGE%:%BUILD_NUMBER%
+                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v C:/ProgramData/Jenkins/.jenkins/workspace/java-sonar:/root/.cache/ -v C:/ProgramData/Jenkins/.jenkins/workspace/trivy-db:/root/.trivy aquasec/trivy image --scanners vuln --timeout 15m --format table -o ${trivyReportPath} %DOCKER_IMAGE%:%BUILD_NUMBER%
                     '''
                     
                     // Output message
@@ -72,7 +72,7 @@ pipeline {
         stage('Report Generation') {
             steps {
                 script {
-                    def reportDir = "${env.WORKSPACE}/reports" // Directory for reports
+                    def reportDir = "${env.WORKSPACE}\\reports" // Directory for reports
                     
                     // Check if the directory exists; if not, create it
                     bat "IF NOT EXIST \"${reportDir}\" mkdir \"${reportDir}\""
@@ -80,12 +80,12 @@ pipeline {
                     // Generate SonarQube report
                     def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
                     def response = bat(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
-                    def reportFilePath = "${reportDir}/sonarqube-report.txt" // Define the report file path
+                    def reportFilePath = "${reportDir}\\sonarqube-report.txt" // Define the report file path
                     writeFile(file: reportFilePath, text: response) // Save the report
                     echo "SonarQube Analysis Report saved at: ${reportFilePath}"
         
                     // Define the path for the Trivy report
-                    def trivyReportPath = "${WORKSPACE}/trivy-report.json" // Ensure this matches your Trivy scan output path
+                    def trivyReportPath = "${env.WORKSPACE}\\trivy-report.txt" // Ensure this matches your Trivy scan output path
                     if (fileExists(trivyReportPath)) {
                         echo "Trivy scan report generated at: ${trivyReportPath}"
                     } else {
