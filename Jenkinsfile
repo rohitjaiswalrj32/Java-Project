@@ -77,18 +77,24 @@ pipeline {
                     def reportDir = "${env.WORKSPACE}\\reports" // Directory for reports
                     
                     // Check if the directory exists; if not, create it
+                    echo "line 1 1executes"
                     bat "IF NOT EXIST \"${reportDir}\" mkdir \"${reportDir}\""
         
                     // Generate SonarQube report
                     def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
+                    echo "line 2 executes"
                     def response = bat(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
+                    echo "line 3 executes"
                     writeFile(file: SONARQUBE_REPORT_PATH, text: response) // Save the report using environment variable
                     echo "SonarQube Analysis Report saved at: ${SONARQUBE_REPORT_PATH}"
+                    echo "line 4 executes"
         
                     // Check for Trivy report using environment variable
                     if (fileExists(TRIVY_REPORT_PATH)) {
+                        echo "line 5 executes"
                         echo "Trivy scan report generated at: ${TRIVY_REPORT_PATH}"
                     } else {
+                        echo "line 6 executes"
                         error "Trivy scan report was not generated."
                     }
                 }
