@@ -92,7 +92,7 @@ pipeline {
                     // Check for Trivy report using environment variable
                     if (fileExists(TRIVY_REPORT_PATH)) {
                         echo "line 5 executes"
-                        echo "Trivy scan report generated at: ${TRIVY_REPORT_PATH}"
+                        echo "Trivy scan report generated at: ${env.TRIVY_REPORT_PATH}"
                     } else {
                         echo "line 6 executes"
                         error "Trivy scan report was not generated."
