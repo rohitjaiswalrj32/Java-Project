@@ -70,41 +70,28 @@ pipeline {
             }
         }
 
-        stage('Report Generation') {
-            steps {
-                script {
-                    def reportDir = "${env.WORKSPACE}\\reports" // Directory for reports
-                    
-                    // Check if the directory exists; if not, create it
-                    echo "line 1 1executes"
-                    bat "IF NOT EXIST \"${reportDir}\" mkdir \"${reportDir}\""
-        
-                    // Generate SonarQube report
-                    def sonarReportUrl = "${SONARQUBE_SERVER_URL}/api/project_analyses/search?project=${SONARQUBE_PROJECT_KEY}"
-                    echo "line 2 executes"
-                    def response = bat(script: "curl -s -u ${SONAR_TOKEN}: ${sonarReportUrl}", returnStdout: true)
-                    echo "line 3 executes"
-                    writeFile(file: SONARQUBE_REPORT_PATH, text: response) // Save the report using environment variable
-                    echo "SonarQube Analysis Report saved at: ${SONARQUBE_REPORT_PATH}"
-                    echo "line 4 executes"
-        
-                    // Check for Trivy report using environment variable
-                    if (fileExists(env.TRIVY_REPORT_PATH)) {
-                        echo "line 5 executes"
-                        echo "Trivy scan report generated at: ${env.TRIVY_REPORT_PATH}"
-                    } else {
-                        echo "line 6 executes"
-                        error "Trivy scan report was not generated."
-                    }
-                }
-            }
-        }
-        
-        stage('Archive Reports') {
-            steps {
-                archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
-                echo "Archived reports successfully."
-            }
+        post {
+        always {
+            // Send email with both SonarQube and Trivy reports attached
+            emailext(
+                to: "${RECIPIENT_EMAIL}",
+                subject: "Jenkins Job: ${env.JOB_NAME} Build #${env.BUILD_NUMBER} Reports",
+                body: """
+                    Hello,
+
+                    Attached are the SonarQube and Trivy scan reports for the build.
+
+                    Build Details:
+                    - Project: ${env.JOB_NAME}
+                    - Build Number: ${env.BUILD_NUMBER}
+                    - SonarQube Report Path: ${SONARQUBE_REPORT_PATH}
+                    - Trivy Report Path: ${TRIVY_REPORT_PATH}
+
+                    Regards,
+                    Jenkins
+                """,
+                attachmentsPattern: "${SONARQUBE_REPORT_PATH}, ${TRIVY_REPORT_PATH}"
+            )
         }
     }
 }
