@@ -91,7 +91,7 @@ pipeline {
                     Jenkins
                 """,
                 attachmentsPattern: "${SONARQUBE_REPORT_PATH}, ${TRIVY_REPORT_PATH}"
-            )
+            }
         }
     }
 }
