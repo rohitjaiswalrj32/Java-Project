@@ -13,6 +13,7 @@ pipeline {
         SONAR_TOKEN = 'sqp_bff11fcbb728a813c946e71554523b989cd4d36d' // Updated token
         SONARQUBE_REPORT_PATH = "${WORKSPACE_DIR}\\reports\\sonarqube-report.txt"
         TRIVY_REPORT_PATH = "${WORKSPACE_DIR}\\trivy-report.txt"
+        RECIPIENT_EMAIL = 'rohitjaiswalrj32@gmail.com'
     }
 
     stages {
@@ -91,7 +92,7 @@ pipeline {
                     Jenkins
                 """,
                 attachmentsPattern: "${SONARQUBE_REPORT_PATH}, ${TRIVY_REPORT_PATH}"
-            }
+            )
         }
     }
 }
