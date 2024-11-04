@@ -52,50 +52,52 @@ pipeline {
                 }
             }
         }
+    } // End of stages
 
-        post {
+    post {
         always {
-        emailext(
-            to: "${RECIPIENT_EMAIL}",
-            subject: "Jenkins Job: ${env.JOB_NAME} Build #${env.BUILD_NUMBER} Report",
-            body: """
-                Hello,
+            emailext(
+                to: "${RECIPIENT_EMAIL}",
+                subject: "Jenkins Job: ${env.JOB_NAME} Build #${env.BUILD_NUMBER} Report",
+                body: """
+                    Hello,
 
-                Attached is the SonarQube report for the build.
+                    Attached is the SonarQube report for the build.
 
-                Build Details:
-                - Project: ${env.JOB_NAME}
-                - Build Number: ${env.BUILD_NUMBER}
-                - SonarQube Report Path: ${SONARQUBE_REPORT_PATH}
+                    Build Details:
+                    - Project: ${env.JOB_NAME}
+                    - Build Number: ${env.BUILD_NUMBER}
+                    - SonarQube Report Path: ${SONARQUBE_REPORT_PATH}
 
-                Regards,
-                Jenkins
-            """,
-            attachmentsPattern: "${SONARQUBE_REPORT_PATH}"
-        )
-    }
-    failure {
-        emailext (
-            subject: "Jenkins Build Failed: Issues Found in Project",
-            body: "The build failed. Please review the SonarQube report for details.",
-            attachmentsPattern: "${SONARQUBE_REPORT_PATH}",
-            to: "${RECIPIENT_EMAIL}"
-        )
-    }
-    unstable {
-        emailext (
-            subject: "Jenkins Build Unstable: Issues Found in Project",
-            body: "The build is unstable. Please review the SonarQube report for details.",
-            attachmentsPattern: "${SONARQUBE_REPORT_PATH}",
-            to: "${RECIPIENT_EMAIL}"
-        )
-    }
-    success {
-        emailext (
-            subject: "Jenkins Build Succeeded",
-            body: "The build completed successfully. Please find the SonarQube report for reference.",
-            attachmentsPattern: "${SONARQUBE_REPORT_PATH}",
-            to: "${RECIPIENT_EMAIL}"
-        )
-    }
+                    Regards,
+                    Jenkins
+                """,
+                attachmentsPattern: "${SONARQUBE_REPORT_PATH}"
+            )
+        }
+        failure {
+            emailext (
+                subject: "Jenkins Build Failed: Issues Found in Project",
+                body: "The build failed. Please review the SonarQube report for details.",
+                attachmentsPattern: "${SONARQUBE_REPORT_PATH}",
+                to: "${RECIPIENT_EMAIL}"
+            )
+        }
+        unstable {
+            emailext (
+                subject: "Jenkins Build Unstable: Issues Found in Project",
+                body: "The build is unstable. Please review the SonarQube report for details.",
+                attachmentsPattern: "${SONARQUBE_REPORT_PATH}",
+                to: "${RECIPIENT_EMAIL}"
+            )
+        }
+        success {
+            emailext (
+                subject: "Jenkins Build Succeeded",
+                body: "The build completed successfully. Please find the SonarQube report for reference.",
+                attachmentsPattern: "${SONARQUBE_REPORT_PATH}",
+                to: "${RECIPIENT_EMAIL}"
+            )
+        }
+    } // End of post
 }
